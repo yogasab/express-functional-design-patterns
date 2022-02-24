@@ -14,6 +14,9 @@ module.exports = {
       project_description: {
         type: Sequelize.STRING
       },
+      slug: {
+				type: Sequelize.STRING,
+			},
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
