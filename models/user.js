@@ -30,5 +30,14 @@ module.exports = (sequelize, DataTypes) => {
 			modelName: "User",
 		}
 	);
+
+	User.beforeCreate("addSlugToUsersTable", (user, options) => {
+		user.slug = user.name.replace(/\s/g, "-").toLowerCase();
+	});
+
+	User.beforeUpdate("updateSlugToUsersTable", (user, options) => {
+		user.slug = user.name.replace(/\s/g, "-").toLowerCase();
+	});
+
 	return User;
 };
