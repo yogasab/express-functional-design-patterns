@@ -1,6 +1,5 @@
 const User = require("../models").User;
 const Computer = require("../models").Computer;
-const Department = require("../models").Department;
 
 exports.createUserRoute = async (req, res) => {
 	try {

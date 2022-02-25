@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 	Department.init(
 		{
 			department_head: DataTypes.STRING,
+			department_name: DataTypes.STRING,
 			department_description: DataTypes.STRING,
 			slug: DataTypes.STRING,
 		},
@@ -30,5 +31,16 @@ module.exports = (sequelize, DataTypes) => {
 			modelName: "Department",
 		}
 	);
+
+	Department.beforeCreate("addSlugToDepartment", (department, options) => {
+		department.slug = department.department_name
+			.replace(/\s/g, "-")
+			.toLowerCase();
+	});
+	Department.beforeUpdate("changeSlugToDepartment", (department, options) => {
+		department.slug = department.department_name
+			.replace(/\s/g, "-")
+			.toLowerCase();
+	});
 	return Department;
 };
