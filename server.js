@@ -1,13 +1,13 @@
 const express = require("express");
-const logger = require("./middlewares/logger");
+const morgan = require("morgan");
 const userRouter = require("./routes/userRouter");
 
 let app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "100kb" }));
+app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 
-app.use(logger);
+app.use(morgan("tiny"));
 app.use("/api/v1/users", userRouter);
 
 app.listen(5000);
