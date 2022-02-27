@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
 			motherboard: DataTypes.STRING,
 			processor: DataTypes.STRING,
 			memory: DataTypes.INTEGER,
-			harddisk: DataTypes.INTEGER,
+			hardisk: DataTypes.INTEGER,
 			os: DataTypes.STRING,
 			user_id: DataTypes.INTEGER,
 			name: DataTypes.STRING,
@@ -30,5 +30,14 @@ module.exports = (sequelize, DataTypes) => {
 			modelName: "Computer",
 		}
 	);
+
+	Computer.beforeCreate("addSlugToComputer", (computer, options) => {
+		computer.slug = computer.name.replace(/\s/g, "-").toLowerCase();
+	});
+
+	Computer.beforeUpdate("updateSlugToComputer", (computer, options) => {
+		computer.slug = computer.name.replace(/\s/g, "-").toLowerCase();
+	});
+
 	return Computer;
 };
