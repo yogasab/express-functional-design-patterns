@@ -4,9 +4,7 @@ const Computer = require("../models").Computer;
 exports.createUserRoute = async (req, res) => {
 	try {
 		const { formBody } = req;
-
 		const user = await User.create(formBody);
-		console.log("OK");
 
 		res.status(201).json({
 			status: "success",
