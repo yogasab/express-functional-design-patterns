@@ -38,33 +38,25 @@ exports.getUsersRoute = async (req, res) => {
 };
 
 exports.getUserRoute = async (req, res) => {
-	try {
-		const { slug } = req;
-		const attributes = ["name", "slug", "nik", "department_id", "createdAt"];
-		const user = await User.findOne({
-			where: { slug },
-			include: [
-				{
-					model: Computer,
-					as: "computer",
-				},
-			],
-			attributes,
-		});
-		console.log(attributes);
-		res.status(200).json({
-			status: "success",
-			message: "User fecthed successfully",
-			data: {
-				user,
+	const { slug } = req;
+	const attributes = ["name", "slug", "nik", "department_id", "createdAt"];
+	const user = await User.findOne({
+		where: { slug },
+		include: [
+			{
+				model: Computer,
+				as: "computer",
 			},
-		});
-	} catch (error) {
-		res.status(400).json({
-			status: "success",
-			message: error.message,
-		});
-	}
+		],
+		attributes,
+	});
+	res.status(200).json({
+		status: "success",
+		message: "User fecthed successfully",
+		data: {
+			user,
+		},
+	});
 };
 
 exports.updateUserRoute = async (req, res) => {
