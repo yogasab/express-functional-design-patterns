@@ -9,6 +9,8 @@ const {
 } = require("../controllers/departmentProjectController");
 const checkIDParam = require("../middlewares/checkIDParam");
 const DepartmentProject = require("../models").DepartmentProject;
+const basicAuth = require("../middlewares/basicAuth");
+const requireAuth = require("../middlewares/requireAuth");
 const departmentProjectRouter = express.Router();
 
 departmentProjectRouter
@@ -17,7 +19,8 @@ departmentProjectRouter
 	.get(getDepartmenProjectsRuote);
 
 departmentProjectRouter.param("id", checkIDParam(DepartmentProject));
-
+// departmentProjectRouter.use(basicAuth);
+// departmentProjectRouter.use(requireAuth);
 departmentProjectRouter
 	.route("/:id")
 	.get(getDepartmenProjectRuote)

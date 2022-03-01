@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("../middlewares/bodyParser");
 const Project = require("../models").Project;
 const checkSlugParam = require("../middlewares/checkSlugParam");
+const basicAuth = require("../middlewares/basicAuth");
+const requireAuth = require("../middlewares/requireAuth");
 const {
 	createProjectRoute,
 	getProjectsRoute,
@@ -17,6 +19,8 @@ projectRouter
 	.get(getProjectsRoute);
 
 projectRouter.param("slug", checkSlugParam(Project));
+projectRouter.use(basicAuth);
+projectRouter.use(requireAuth);
 projectRouter
 	.route("/:slug")
 	.get(checkSlugParam(Project), getProjectRoute)
