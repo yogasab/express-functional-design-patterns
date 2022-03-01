@@ -1,5 +1,6 @@
 const User = require("../models").User;
 const Department = require("../models").Department;
+const Project = require("../models").Project;
 
 exports.createDepartmentRoute = async (req, res) => {
 	try {
@@ -50,6 +51,10 @@ exports.getDepartmentRoute = async (req, res) => {
 				{
 					model: User,
 					as: "users",
+				},
+				{
+					model: Project,
+					as: "projects",
 				},
 			],
 			order: [["createdAt", "DESC"]],

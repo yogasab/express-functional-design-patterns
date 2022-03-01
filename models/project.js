@@ -26,5 +26,14 @@ module.exports = (sequelize, DataTypes) => {
 			modelName: "Project",
 		}
 	);
+
+	Project.beforeCreate("addSlug", (project, options) => {
+		project.slug = project.project_head.replace(/\s+/g, "-").toLowerCase();
+	});
+
+	Project.beforeUpdate("updateSlug", (project, options) => {
+		project.slug = project.project_head.replace(/\s+/g, "-").toLowerCase();
+	});
+
 	return Project;
 };
