@@ -1,19 +1,24 @@
 const User = require("../models").User;
+const bcrypt = require("bcryptjs");
+
 const findUserByCredentials = async ({ username, password }) => {
 	try {
-		const res = await User.findOne({ where: { username, password } });
-		if (!res) {
-			console.log("User not found");
+		const user = await User.findOne({ where: { username } });
+		if (!user) {
 			return false;
 		}
-		return res;
+		const isPasswordMatched = await bcrypt.compare(password, user.password);
+		if (!isPasswordMatched) {
+			return false;
+		}
+		return user;
 	} catch (error) {
 		console.log(error);
 		return false;
 	}
 };
 
-const basicAuth = (findUserByCredentials) => async (req, res, next) => {
+const basicAuth = async (req, res, next) => {
 	const header = req.headers.authorization || "";
 	const [type, payload] = header.split(" ");
 	if (type === "Basic") {

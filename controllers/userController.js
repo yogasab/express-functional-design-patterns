@@ -63,6 +63,7 @@ exports.updateUserRoute = async (req, res) => {
 	try {
 		const { slug, body } = req;
 		const user = await User.findOne({ where: { slug } });
+		console.log(user);
 		await user.update(body);
 		res.status(200).json({
 			status: "success",

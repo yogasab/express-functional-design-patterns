@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
 	class User extends Model {
 		/**
@@ -33,12 +34,16 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
 
-	User.beforeCreate("addSlugToUsersTable", (user, options) => {
+	User.beforeCreate("addSlugToUsersTable", async (user, options) => {
 		user.slug = user.name.replace(/\s/g, "-").toLowerCase();
+		user.password = await bcrypt.hash(user.password, 12);
 	});
 
-	User.beforeUpdate("updateSlugToUsersTable", (user, options) => {
+	User.beforeUpdate("updateSlugToUsersTable", async (user, options) => {
 		user.slug = user.name.replace(/\s/g, "-").toLowerCase();
+		if (user.previous("password") != user.password) {
+			user.password = await bcrypt.hash(user.password, 12);
+		}
 	});
 
 	return User;
