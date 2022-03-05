@@ -6,6 +6,8 @@ const userRouter = require("./routes/userRouter");
 const computerRouter = require("./routes/computerRouter");
 const projectRouter = require("./routes/projectRouter");
 const departmentProjectRouter = require("./routes/departmentProjectRouter");
+const authRouter = require("./routes/authRouter");
+require("dotenv").config();
 
 let app = express();
 
@@ -14,6 +16,7 @@ app.use(compression());
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/departments", departmentRouter);
 app.use("/api/v1/computers", computerRouter);

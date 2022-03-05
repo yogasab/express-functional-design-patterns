@@ -46,5 +46,9 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	});
 
+	User.prototype.isPasswordMatched = async function (enteredPassword) {
+		return await bcrypt.compare(enteredPassword, this.password);
+	};
+
 	return User;
 };
