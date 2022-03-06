@@ -10,12 +10,16 @@ const basicAuth = require("../middlewares/basicAuth");
 const bodyParser = require("../middlewares/bodyParser");
 const checkSlugParam = require("../middlewares/checkSlugParam");
 const requireAuth = require("../middlewares/requireAuth");
+const tokenAuth = require("../middlewares/tokenAuth");
 const Department = require("../models").Department;
 const departmentRouter = express.Router();
 
+departmentRouter.use(tokenAuth);
+departmentRouter.use(basicAuth);
+
 departmentRouter
 	.route("/")
-	.post(bodyParser, basicAuth, createDepartmentRoute)
+	.post(bodyParser, createDepartmentRoute)
 	.get(getDepartmentsRoute);
 
 departmentRouter.param("slug", checkSlugParam(Department));

@@ -29,6 +29,7 @@ exports.loginRoute = async (req, res) => {
 	try {
 		const { username, password } = req.body;
 		const attributes = [
+			"id",
 			"name",
 			"slug",
 			"nik",
@@ -48,7 +49,8 @@ exports.loginRoute = async (req, res) => {
 		if (!user || !(await user.isPasswordMatched(password))) {
 			sendErrorResponse(res, 401, "failed", "Invalid credentials");
 		}
-		sendResponseResponse(res, 200, "success", "User found", user);
+		const token = generateToken(user);
+		sendResponseResponse(res, 200, "success", "User found", { user, token });
 	} catch (error) {
 		sendErrorResponse(res, 400, "failed", error.message);
 	}

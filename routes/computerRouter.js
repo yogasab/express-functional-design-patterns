@@ -11,7 +11,11 @@ const checkSlugParam = require("../middlewares/checkSlugParam");
 const Computer = require("../models").Computer;
 const basicAuth = require("../middlewares/basicAuth");
 const requireAuth = require("../middlewares/requireAuth");
+const tokenAuth = require("../middlewares/tokenAuth");
 const computerRouter = express.Router();
+
+computerRouter.use(tokenAuth);
+computerRouter.use(basicAuth);
 
 computerRouter
 	.route("/")
@@ -19,7 +23,6 @@ computerRouter
 	.get(getComputersRoute);
 
 computerRouter.param("slug", checkSlugParam(Computer));
-computerRouter.use(basicAuth);
 computerRouter.use(requireAuth);
 computerRouter
 	.route("/:slug")

@@ -11,7 +11,11 @@ const {
 	updateProjectRoute,
 	deleteProjectRoute,
 } = require("../controllers/projectController");
+const tokenAuth = require("../middlewares/tokenAuth");
 const projectRouter = express.Router();
+
+projectRouter.use(basicAuth);
+projectRouter.use(tokenAuth);
 
 projectRouter
 	.route("/")
@@ -19,7 +23,6 @@ projectRouter
 	.get(getProjectsRoute);
 
 projectRouter.param("slug", checkSlugParam(Project));
-projectRouter.use(basicAuth);
 projectRouter.use(requireAuth);
 projectRouter
 	.route("/:slug")
