@@ -1,5 +1,6 @@
 const User = require("../models").User;
 const Computer = require("../models").Computer;
+const { sendErrorResponse, sendResponseResponse } = require("../lib/response");
 
 exports.createUserRoute = async (req, res) => {
 	try {
@@ -63,15 +64,17 @@ exports.updateUserRoute = async (req, res) => {
 	try {
 		const { slug, body } = req;
 		const user = await User.findOne({ where: { slug } });
-		console.log(user);
+		if (req.user.id !== user.id) {
+			sendErrorResponse(res, 403, "failed", "You cannot perform this route");
+		}
 		await user.update(body);
-		res.status(200).json({
-			status: "success",
-			message: "User updated successfully",
-			data: {
-				user,
-			},
-		});
+		sendResponseResponse(
+			res,
+			200,
+			"success",
+			"User updated successfully",
+			user
+		);
 	} catch (error) {
 		res.status(400).json({
 			status: "success",
@@ -83,8 +86,12 @@ exports.updateUserRoute = async (req, res) => {
 exports.deleteUserRoute = async (req, res) => {
 	try {
 		const { slug } = req;
-		const user = await User.destroy({ where: { slug } });
-		res.status(204).send("OK");
+		const user = await User.findOne({ where: { slug } });
+		if (req.user.id !== user.id) {
+			sendErrorResponse(res, 403, "failed", "You cannot perform this route");
+		}
+		await user.destroy();
+		res.status(204).send();
 	} catch (error) {
 		res.status(400).json({
 			status: "success",

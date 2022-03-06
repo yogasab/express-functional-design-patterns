@@ -1,3 +1,5 @@
+const { sendErrorResponse, sendResponseResponse } = require("../lib/response");
+
 const User = require("../models").User;
 const Department = require("../models").Department;
 const Project = require("../models").Project;
@@ -73,9 +75,21 @@ exports.getDepartmentRoute = async (req, res) => {
 
 exports.deleteDepartmentRoute = async (req, res) => {
 	try {
-		const { slug } = req;
-		console.log(slug);
-		const department = await Department.destroy({ where: { slug } });
+		const { slug, user } = req;
+		const department = await Department.findOne({
+			where: { slug },
+			include: [{ model: User, as: "users" }],
+		});
+		const users = department.users.map((user) => user.id);
+		if (!users.includes(user.id)) {
+			sendErrorResponse(
+				res,
+				403,
+				"failed",
+				"You are not authorize to perform this route"
+			);
+		}
+		await department.destroy();
 		res.status(204).send();
 	} catch (error) {
 		res.status(400).json({ status: "success", message: error.message });
@@ -84,16 +98,33 @@ exports.deleteDepartmentRoute = async (req, res) => {
 
 exports.updateDepartmentRoute = async (req, res) => {
 	try {
-		const { slug, body } = req;
-		const department = await Department.findOne({ where: { slug } });
-		await department.update(body);
-		res.status(200).json({
-			status: "success",
-			message: "Department updated successfully",
-			data: {
-				department,
-			},
+		const { slug, body, user } = req;
+		const department = await Department.findOne({
+			where: { slug },
+			include: [
+				{
+					model: User,
+					as: "users",
+				},
+			],
 		});
+		const users = department.users.map((u) => u.id);
+		if (!users.includes(user.id)) {
+			sendErrorResponse(
+				res,
+				403,
+				"failed",
+				"You are not authorized to perform this route"
+			);
+		}
+		await department.update(body);
+		sendResponseResponse(
+			res,
+			200,
+			"success",
+			"Department updated succcessfully",
+			department
+		);
 	} catch (error) {
 		res.status(400).json({ status: "success", message: error.message });
 	}

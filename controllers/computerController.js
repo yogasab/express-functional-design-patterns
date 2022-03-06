@@ -1,5 +1,6 @@
 const Computer = require("../models").Computer;
 const User = require("../models").User;
+const { sendResponseResponse, sendErrorResponse } = require("../lib/response");
 const attributes = [
 	"name",
 	"motherboard",
@@ -16,13 +17,13 @@ exports.createComputerRoute = async (req, res) => {
 	try {
 		const { formBody } = req;
 		const computer = await Computer.create(formBody);
-		res.status(201).json({
-			status: "Success",
-			message: "Computer created successfully",
-			data: {
-				computer,
-			},
-		});
+		sendResponseResponse(
+			res,
+			201,
+			"success",
+			"Computer created successfully",
+			computer
+		);
 	} catch (error) {
 		res.status(400).json({ status: "Failed", message: error.message });
 	}
@@ -74,16 +75,24 @@ exports.getComputerRoute = async (req, res) => {
 
 exports.updateComputerRoute = async (req, res) => {
 	try {
-		const { body, slug } = req;
+		const { body, slug, user } = req;
 		const computer = await Computer.findOne({ where: { slug } });
+		if (user.id !== computer.user_id) {
+			sendErrorResponse(
+				res,
+				403,
+				"failed",
+				"You are prohibited to perform this route"
+			);
+		}
 		await computer.update(body);
-		res.status(200).json({
-			status: "success",
-			message: `Computer ${computer.name} updated successfully`,
-			data: {
-				computer,
-			},
-		});
+		sendResponseResponse(
+			res,
+			200,
+			"success",
+			"Computer updated successfully",
+			computer
+		);
 	} catch (error) {
 		res.status(400).json({ status: "Failed", message: error.message });
 	}
@@ -91,9 +100,24 @@ exports.updateComputerRoute = async (req, res) => {
 
 exports.deleteComputerRoute = async (req, res) => {
 	try {
-		const { slug } = req;
-		await Computer.destroy({ where: { slug } });
-		res.status(204).send();
+		const { slug, user } = req;
+		const computer = await Computer.findOne({ where: { slug } });
+		if (user.id !== computer.user_id) {
+			sendErrorResponse(
+				res,
+				403,
+				"failed",
+				"You are prohibited to perform this route"
+			);
+		}
+		await computer.destroy();
+		sendResponseResponse(
+			res,
+			204,
+			"success",
+			"Computer deleted successfully",
+			computer
+		);
 	} catch (error) {
 		res.status(400).json({ status: "Failed", message: error.message });
 	}
