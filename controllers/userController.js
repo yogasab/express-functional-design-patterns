@@ -64,9 +64,6 @@ exports.updateUserRoute = async (req, res) => {
 	try {
 		const { slug, body } = req;
 		const user = await User.findOne({ where: { slug } });
-		if (req.user.id !== user.id) {
-			sendErrorResponse(res, 403, "failed", "You cannot perform this route");
-		}
 		await user.update(body);
 		sendResponseResponse(
 			res,
@@ -87,9 +84,6 @@ exports.deleteUserRoute = async (req, res) => {
 	try {
 		const { slug } = req;
 		const user = await User.findOne({ where: { slug } });
-		if (req.user.id !== user.id) {
-			sendErrorResponse(res, 403, "failed", "You cannot perform this route");
-		}
 		await user.destroy();
 		res.status(204).send();
 	} catch (error) {

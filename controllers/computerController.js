@@ -77,14 +77,6 @@ exports.updateComputerRoute = async (req, res) => {
 	try {
 		const { body, slug, user } = req;
 		const computer = await Computer.findOne({ where: { slug } });
-		if (user.id !== computer.user_id) {
-			sendErrorResponse(
-				res,
-				403,
-				"failed",
-				"You are prohibited to perform this route"
-			);
-		}
 		await computer.update(body);
 		sendResponseResponse(
 			res,
@@ -102,14 +94,6 @@ exports.deleteComputerRoute = async (req, res) => {
 	try {
 		const { slug, user } = req;
 		const computer = await Computer.findOne({ where: { slug } });
-		if (user.id !== computer.user_id) {
-			sendErrorResponse(
-				res,
-				403,
-				"failed",
-				"You are prohibited to perform this route"
-			);
-		}
 		await computer.destroy();
 		sendResponseResponse(
 			res,

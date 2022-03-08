@@ -7,6 +7,13 @@ const checkSlugParam = (Model) => {
 				.json({ status: "Failed", message: "Item not found" });
 		}
 		req.slug = val;
+		if (result.constructor.name === "Computer") {
+			// Computer
+			req.id = result.user_id;
+		} else {
+			// User
+			req.id = result.id;
+		}
 		next();
 	};
 };
