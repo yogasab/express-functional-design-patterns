@@ -4,6 +4,11 @@ This repository contains implementations of the book Functional Design Patterns 
 slightly modified
 ```
 
+# Deployed API
+```
+Coming soon
+```
+
 # Documentation
 ```
 https://documenter.getpostman.com/view/12308942/UVsEWVKR
@@ -14,7 +19,7 @@ Start by cloning this repository
 
 ```
 # HTTPS
-$ git clone https://github.com/yogasab/techincal-test-fast-8.git
+$ git clone https://github.com/yogasab/express-functional-design-patterns.git
 ```
 
 then
